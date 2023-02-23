@@ -4,7 +4,7 @@ public class Dog {
 	
 	private String name;
 	private String color;
-	private static Dog instance = new Dog();
+	private volatile static Dog instance = new Dog();
 	
 	
 	public void setName(String name) {
@@ -26,10 +26,11 @@ public class Dog {
 	private Dog() {}
 	
 	public static Dog getInstance() {
-		if(instance==null)
-			instance = new Dog();
-		return instance;
+			if(instance==null) {
+				synchronized (Dog.class){
+					instance = new Dog();
+				}
+			}
+			return instance;
 	}
-	
-	
 }
